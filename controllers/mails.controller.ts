@@ -12,6 +12,25 @@ class MailsCtrl {
     }
   }
 
+  async getMailsByCategory(req: any, res: express.Response): Promise<void> {
+    try {
+      const { category } = req.params;
+      const mails = await Mail.find(
+        { category: `${category}` },
+        (err, result) => {
+          if (err) {
+            res.status(400).json('Error: ' + err);
+          } else {
+            return result;
+          }
+        }
+      );
+      res.status(200).json(mails);
+    } catch (err) {
+      res.status(400).json('Error: ' + err);
+    }
+  }
+
   async newMail(req: any, res: express.Response): Promise<void> {
     try {
       const newMail = new Mail(req.body);
@@ -36,8 +55,24 @@ class MailsCtrl {
     try {
       const { mailId } = req.params;
       const newMail = req.body;
+      console.log(newMail);
       const result = await Mail.findByIdAndUpdate(mailId, newMail);
       res.status(200).json(result);
+    } catch (err) {
+      res.status(400).json('Error: ' + err);
+    }
+  }
+
+  async getStarredMails(_: any, res: express.Response): Promise<void> {
+    try {
+      const mails = await Mail.find({ starred: true }, (err, result) => {
+        if (err) {
+          res.status(400).json('Error: ' + err);
+        } else {
+          return result;
+        }
+      });
+      res.status(200).json(mails);
     } catch (err) {
       res.status(400).json('Error: ' + err);
     }
