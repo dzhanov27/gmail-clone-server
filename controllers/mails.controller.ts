@@ -55,7 +55,6 @@ class MailsCtrl {
     try {
       const { mailId } = req.params;
       const newMail = req.body;
-      console.log(newMail);
       const result = await Mail.findByIdAndUpdate(mailId, newMail);
       res.status(200).json(result);
     } catch (err) {
